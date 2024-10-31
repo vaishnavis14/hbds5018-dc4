@@ -1,0 +1,40 @@
+---
+title: "Data Challenge 4"
+format: html
+editor: visual
+---
+
+## Problem 1
+
+```{r}
+monty_carlo_simulation <- function(switch) {
+  car <- sample(1:3, 1) # random door is selected for the car
+  option_1 <- sample(1:3, 1) # contestent chooses random door
+  vec <- setdiff(1:3, car) # options for monty
+  
+  monty_1 <- setdiff(1:3, c(option_1, car)) # monty chooses a door that is different from the car and what the contestent chose
+  if(length(monty_1) == 2){ # if the contestant chose the car the first time around, there will be 2 numbers in monty_1. This randomly chooses 1
+    monty_1 <- sample(monty_1, 1)
+  }
+  if (switch) { # if the contestent chose to switch, the door chosen is different from the first option and the door monty opened
+    option_2 <- setdiff(1:3, c(option_1, monty_1))
+    return(car == option_2) # whether the contestent won or not from switching the door
+  } else {
+    return(car == option_1) # whether the contesetent won or not from not switching the door
+  }
+}
+```
+
+## Problem 2
+
+```{r}
+set.seed(123)
+outcomes_T <- replicate(1000, monty_carlo_simulation(TRUE)) # simulating 1000 tries of wins and losses when switching the door every time
+sum(outcomes_T) / 1000 # proportion of wins
+```
+
+```{r}
+set.seed(123)
+outcomes_F <- replicate(1000, monty_carlo_simulation(FALSE)) # simulating 1000 tries of wins and losses when not switching the door every time
+sum(outcomes_F) / 1000 # proportion of wins
+```
